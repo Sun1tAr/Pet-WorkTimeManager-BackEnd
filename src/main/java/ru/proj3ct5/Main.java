@@ -13,7 +13,7 @@ import ru.proj3ct5.service.timeTracker.TimeTrackerHandler;
 @Log4j
 public class Main {
     @SneakyThrows
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         PropertyConfigurator.configure(
                 "C:\\0_DATA\\CodeProjects\\Java\\MyManager\\src\\main\\resources\\log4j.properties");
 

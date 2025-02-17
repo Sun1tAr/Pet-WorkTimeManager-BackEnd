@@ -23,7 +23,7 @@ public class Subscriber {
     private boolean run;
 
     
-    @SneakyThrows
+
     public void start() {
         run = true;
         Configurator config = new Configurator();
@@ -46,7 +46,13 @@ public class Subscriber {
             log.error("Failed to open pcap handle: {}", e.getMessage());
         }
 
-        pcapHandle.setFilter("ip proto \\udp && dst port " + port, BpfProgram.BpfCompileMode.NONOPTIMIZE);
+        try {
+            pcapHandle.setFilter("ip proto \\udp && dst port " + port, BpfProgram.BpfCompileMode.NONOPTIMIZE);
+        } catch (PcapNativeException e) {
+            throw new RuntimeException(e);
+        } catch (NotOpenException e) {
+            log.error("Failed to open pcap handle: {}", e.getMessage());
+        }
 
         t = new Thread(() -> {
             try {

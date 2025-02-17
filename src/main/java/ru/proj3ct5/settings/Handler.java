@@ -32,24 +32,32 @@ public abstract class Handler {
             }
 
             while (running) {
+                Message deserialized;
                 messagesList = subscriber.getMessages();
                 log.debug("Received list of messages: {}", messagesList);
                 if (messagesList.size() > oldMsgCount) {
                     /*
-                    * TODO реализовать возможность проверки
-                    *  нескольких последних сообщений
-                    * */
-                    String message = messagesList.getLast();
-                    oldMsgCount = messagesList.size();
-                    log.debug("Messages list updates to {} size", oldMsgCount);
-                    log.debug("Last message received: {}", message);
-                    Message deserialized = Message.deserialize(message);
+                     * TODO реализовать возможность проверки
+                     *  нескольких последних сообщений
+                     * */
 
-                    command = deserialized.getData();
-                    log.debug("Deserialized command: {}", command);
-                    executeCommand();
+                    for (int i = oldMsgCount; i < messagesList.size(); i++) {
+                        String message = messagesList.get(i);
+                        log.debug("New message received: {}", message);
+                        deserialized = Message.deserialize(message);
+                        command = deserialized.getData();
+                        log.debug("Deserialized command: {}", command);
+                        executeCommand();
+                        oldMsgCount++;
+                    }
+                    log.debug("Messages list updates to {} size", oldMsgCount);
                 } else {
                     log.debug("No new messages received");
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        log.error("Thread interrupted: {}", e.getMessage());
+                    }
                 }
             }
         });
