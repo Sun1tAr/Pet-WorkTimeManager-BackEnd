@@ -17,9 +17,9 @@ public class Main {
         PropertyConfigurator.configure(
                 "C:\\0_DATA\\CodeProjects\\Java\\MyManager\\src\\main\\resources\\log4j.properties");
 
-        Subscriber subscriber = new Subscriber();
+        Subscriber timeTrackerSubscriber = new Subscriber("TimeTracker");
 
-        Handler h = new TimeTrackerHandler(subscriber);
+        Handler h = new TimeTrackerHandler(timeTrackerSubscriber);
         h.process();
 
         GUI gui = new GUI();

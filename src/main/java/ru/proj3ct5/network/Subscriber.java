@@ -1,7 +1,6 @@
 package ru.proj3ct5.network;
 
 import com.sun.jna.NativeLibrary;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.pcap4j.core.*;
 import ru.proj3ct5.settings.Configurator;
@@ -11,6 +10,9 @@ import java.util.*;
 @Slf4j
 public class Subscriber {
 
+    public Subscriber(String THIS_SERVICE_NAME) {
+        this.THIS_SERVICE_NAME = THIS_SERVICE_NAME;
+    }
 
     static {
         NativeLibrary.addSearchPath("wpcap", "C:\\Windows\\System32\\Npcap");
@@ -21,6 +23,7 @@ public class Subscriber {
     private int port;
     private Thread t;
     private boolean run;
+    private String THIS_SERVICE_NAME;
 
     
 
@@ -59,7 +62,7 @@ public class Subscriber {
                 pcapHandle.loop(-1, (PacketListener) packet -> {
                     byte[] rawData = packet.getRawData();
                     String newMessage = new String(rawData, 32, rawData.length - 32);
-                    if (Message.isMyMessage(newMessage)) {
+                    if (Message.isMyMessage(newMessage, THIS_SERVICE_NAME)) {
                         messages.add(newMessage);
                         log.debug("New message received: {}", newMessage);
                     } else {

@@ -36,10 +36,6 @@ public abstract class Handler {
                 messagesList = subscriber.getMessages();
                 log.debug("Received list of messages: {}", messagesList);
                 if (messagesList.size() > oldMsgCount) {
-                    /*
-                     * TODO реализовать возможность проверки
-                     *  нескольких последних сообщений
-                     * */
 
                     for (int i = oldMsgCount; i < messagesList.size(); i++) {
                         String message = messagesList.get(i);

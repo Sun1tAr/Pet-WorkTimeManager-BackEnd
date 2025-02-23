@@ -7,9 +7,6 @@ import ru.proj3ct5.settings.Configurator;
 @Slf4j
 public class Message {
 
-    private final String MY_NAME = "TimeTracker";
-
-
     Configurator config = new Configurator();
     private int port = config.getPort();
     private String ip = config.getIp();
@@ -64,9 +61,17 @@ public class Message {
         return message;
     }
 
-    public static boolean isMyMessage(String serializedMessage) {
+    public static boolean isMyMessage(String serializedMessage, String THIS_SERVICE_NAME) {
         Message receivedMessage = deserialize(serializedMessage);
-        return receivedMessage.receiver.equals(receivedMessage.MY_NAME);
+        String currentReceiver = receivedMessage.receiver;
+        /* TODO: реализовать возможность отправки сообщения всем, возможно стоит реализовать отдельный подсервис,
+            выполняющий прием сообщений с тегом "ALL" и рассылающий всем известным сервисам
+         */
+//        if (currentReceiver.equals("ALL")) {
+//            resendMessage(serializedMessage);
+//            return true;
+//        }
+        return currentReceiver.equals(THIS_SERVICE_NAME);
     }
 
     public static void resendMessage(String serializedMessage) {
@@ -84,11 +89,8 @@ public class Message {
         }
 
         public Message build() {
-            if (message.sender == null) {
-                message.sender = message.MY_NAME;
-            }
-            if (message.receiver == null || message.data == null) {
-                log.error("Message wasn't built because receiver and/or data is null");
+            if (message.receiver == null || message.data == null || message.sender == null) {
+                log.error("Message will not built while all poles wasn`t fill");
                 throw new IllegalArgumentException("Message cannot be empty");
             }
             return message;
