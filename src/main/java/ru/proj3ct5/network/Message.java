@@ -89,7 +89,7 @@ public class Message {
         }
 
         public Message build() {
-            if (message.receiver == null || message.data == null || message.sender == null) {
+            if (message.receiver == null || message.data == null /*|| message.sender == null*/) {
                 log.error("Message will not built while all poles wasn`t fill");
                 throw new IllegalArgumentException("Message cannot be empty");
             }
